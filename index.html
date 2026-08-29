@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>头寸录入汇总</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --ink: #111827;
+      --muted: #667085;
+      --line: #d8dee8;
+      --blue: #1f5f99;
+      --green: #087a6d;
+      --red: #b42318;
+      --amber: #a35c00;
+      --shadow: 0 10px 26px rgba(17, 24, 39, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, #eaf1f8 0, rgba(234, 241, 248, 0) 260px),
+        var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(100% - 24px, 520px);
+      margin: 0 auto;
+      padding: max(18px, env(safe-area-inset-top)) 0 max(28px, env(safe-area-inset-bottom));
+    }
+
+    .header {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .net-card {
+      padding: 18px;
+      border: 1px solid rgba(31, 95, 153, 0.18);
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .net-label {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .net-value {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 8px;
+      color: var(--blue);
+      font-size: clamp(42px, 14vw, 64px);
+      font-weight: 820;
+      line-height: 1;
+    }
+
+    .net-value small {
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .formula {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .export-btn {
+      width: 100%;
+      height: 46px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 10px;
+      color: #fff;
+      background: var(--blue);
+      font-weight: 750;
+    }
+
+    .section-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--card);
+      box-shadow: 0 8px 22px rgba(17, 24, 39, 0.06);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .panel-title {
+      display: grid;
+      gap: 4px;
+    }
+
+    .panel-title strong {
+      font-size: 18px;
+    }
+
+    .panel-title span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .add-btn {
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(31, 95, 153, 0.24);
+      border-radius: 10px;
+      color: var(--blue);
+      background: #fff;
+      font-size: 28px;
+      line-height: 38px;
+    }
+
+    .rows {
+      display: grid;
+      gap: 6px;
+      padding: 8px;
+    }
+
+    .table-head {
+      display: grid;
+      grid-template-columns: minmax(86px, 1.18fr) minmax(58px, 0.76fr) minmax(50px, 0.66fr) minmax(50px, 0.66fr) 30px;
+      gap: 5px;
+      padding: 0 4px 2px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: minmax(86px, 1.18fr) minmax(58px, 0.76fr) minmax(50px, 0.66fr) minmax(50px, 0.66fr) 30px;
+      gap: 5px;
+      align-items: center;
+      padding: 6px 4px;
+      border: 1px solid #e1e6ee;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .field-grid {
+      display: contents;
+    }
+
+    .field {
+      display: grid;
+      gap: 5px;
+    }
+
+    label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+
+    input,
+    textarea {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: #fff;
+      outline: 0;
+    }
+
+    input {
+      height: 34px;
+      padding: 0 7px;
+      font-size: 14px;
+    }
+
+    textarea {
+      min-height: 220px;
+      padding: 12px;
+      line-height: 1.55;
+      resize: vertical;
+    }
+
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(31, 95, 153, 0.12);
+    }
+
+    .row-actions {
+      display: block;
+    }
+
+    .delete-btn {
+      width: 30px;
+      height: 34px;
+      border: 1px solid #f1c7c2;
+      border-radius: 7px;
+      padding: 0;
+      color: var(--red);
+      background: #fff7f6;
+      font-size: 20px;
+      font-weight: 650;
+      line-height: 28px;
+    }
+
+    .empty {
+      padding: 18px 10px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .positive {
+      color: var(--green);
+    }
+
+    .negative {
+      color: var(--red);
+    }
+
+    .neutral {
+      color: var(--blue);
+    }
+
+    .dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: end;
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.42);
+      z-index: 10;
+    }
+
+    .dialog-backdrop.show {
+      display: flex;
+    }
+
+    .dialog {
+      width: min(100%, 520px);
+      margin: 0 auto;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 22px 60px rgba(15, 23, 42, 0.24);
+      overflow: hidden;
+    }
+
+    .dialog-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dialog-title {
+      font-size: 18px;
+      font-weight: 760;
+    }
+
+    .close-btn {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 24px;
+      line-height: 34px;
+    }
+
+    .dialog-body {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .copy-btn {
+      height: 44px;
+      border: 0;
+      border-radius: 10px;
+      color: #fff;
+      background: var(--green);
+      font-weight: 750;
+    }
+
+    @media (max-width: 380px) {
+      .app {
+        width: min(100% - 18px, 520px);
+      }
+
+      .field-grid {
+        display: contents;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <h1>头寸录入汇总</h1>
+      <section class="net-card" aria-label="净融入">
+        <div class="net-label">净融入</div>
+        <div class="net-value" id="netValue">0.00<small>亿元</small></div>
+        <div class="formula">净融入 = 正回购 + 拆入 - 拆出 - 逆回购</div>
+        <button class="export-btn" type="button" id="exportBtn">导出交易要素</button>
+      </section>
+    </header>
+
+    <section class="section-list" id="sectionList" aria-label="业务录入"></section>
+  </main>
+
+  <div class="dialog-backdrop" id="exportDialog" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+    <div class="dialog">
+      <div class="dialog-head">
+        <div class="dialog-title" id="exportTitle">交易要素汇总</div>
+        <button class="close-btn" type="button" id="closeExportBtn" aria-label="关闭">×</button>
+      </div>
+      <div class="dialog-body">
+        <textarea id="exportText" readonly></textarea>
+        <button class="copy-btn" type="button" id="copyBtn">复制文本</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const storageKey = "mobile-position-ledger-v1";
+    const sections = [
+      { id: "repo", name: "正回购", sign: 1 },
+      { id: "reverseRepo", name: "逆回购", sign: -1 },
+      { id: "borrowIn", name: "拆入", sign: 1 },
+      { id: "lendOut", name: "拆出", sign: -1 }
+    ];
+
+    let records = loadRecords();
+    const sectionList = document.querySelector("#sectionList");
+    const netValue = document.querySelector("#netValue");
+    const exportDialog = document.querySelector("#exportDialog");
+    const exportText = document.querySelector("#exportText");
+    const copyBtn = document.querySelector("#copyBtn");
+
+    function loadRecords() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey));
+        if (saved && typeof saved === "object") {
+          return sections.reduce((next, section) => {
+            next[section.id] = Array.isArray(saved[section.id]) ? saved[section.id] : [];
+            return next;
+          }, {});
+        }
+      } catch {
+        // Ignore malformed storage and start fresh.
+      }
+      return sections.reduce((next, section) => {
+        next[section.id] = [];
+        return next;
+      }, {});
+    }
+
+    function saveRecords() {
+      localStorage.setItem(storageKey, JSON.stringify(records));
+    }
+
+    function parseAmount(value) {
+      const amount = Number(String(value).replace(/,/g, "").trim());
+      return Number.isFinite(amount) ? amount : 0;
+    }
+
+    function formatAmount(value) {
+      return Number(value || 0).toFixed(2);
+    }
+
+    function sectionTotal(sectionId) {
+      return records[sectionId].reduce((sum, record) => sum + parseAmount(record.amount), 0);
+    }
+
+    function render() {
+      const totals = sections.map((section) => ({
+        ...section,
+        total: sectionTotal(section.id)
+      }));
+      const net = totals.reduce((sum, section) => sum + section.total * section.sign, 0);
+
+      netValue.className = `net-value ${net > 0 ? "positive" : net < 0 ? "negative" : "neutral"}`;
+      netValue.innerHTML = `${formatAmount(net)}<small>亿元</small>`;
+
+      sectionList.innerHTML = sections.map((section) => {
+        const rows = records[section.id];
+        const rowHtml = rows.length
+          ? `
+            <div class="table-head" aria-hidden="true">
+              <span>交易对手</span>
+              <span>金额</span>
+              <span>期限</span>
+              <span>价格</span>
+              <span></span>
+            </div>
+            ${rows.map((record, index) => rowTemplate(section.id, record, index)).join("")}
+          `
+          : `<div class="empty">点击右上角 + 新增记录</div>`;
+
+        return `
+          <article class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <strong>${section.name}</strong>
+                <span>小计 ${formatAmount(sectionTotal(section.id))} 亿元</span>
+              </div>
+              <button class="add-btn" type="button" data-add="${section.id}" aria-label="新增${section.name}">+</button>
+            </div>
+            <div class="rows">${rowHtml}</div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function rowTemplate(sectionId, record, index) {
+      return `
+        <div class="row" data-section="${sectionId}" data-index="${index}">
+          <div class="field-grid">
+            <div class="field">
+              <label>交易对手</label>
+              <input data-field="counterparty" value="${escapeHtml(record.counterparty)}" placeholder="对手">
+            </div>
+            <div class="field">
+              <label>金额</label>
+              <input data-field="amount" value="${escapeHtml(record.amount)}" inputmode="decimal" placeholder="金额">
+            </div>
+            <div class="field">
+              <label>期限</label>
+              <input data-field="term" value="${escapeHtml(record.term)}" placeholder="期限">
+            </div>
+            <div class="field">
+              <label>价格</label>
+              <input data-field="price" value="${escapeHtml(record.price)}" placeholder="价格">
+            </div>
+          </div>
+          <div class="row-actions">
+            <button class="delete-btn" type="button" data-delete aria-label="删除">×</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function addRecord(sectionId) {
+      records[sectionId].push({
+        counterparty: "",
+        amount: "",
+        term: "",
+        price: ""
+      });
+      saveRecords();
+      render();
+      const lastRow = document.querySelector(`[data-section="${sectionId}"][data-index="${records[sectionId].length - 1}"] input`);
+      if (lastRow) {
+        lastRow.focus();
+      }
+    }
+
+    function updateRecord(row, field, value) {
+      const sectionId = row.dataset.section;
+      const index = Number(row.dataset.index);
+      records[sectionId][index][field] = value;
+      saveRecords();
+      updateTotalsOnly();
+    }
+
+    function updateTotalsOnly() {
+      const totals = sections.map((section) => ({
+        ...section,
+        total: sectionTotal(section.id)
+      }));
+      const net = totals.reduce((sum, section) => sum + section.total * section.sign, 0);
+      netValue.className = `net-value ${net > 0 ? "positive" : net < 0 ? "negative" : "neutral"}`;
+      netValue.innerHTML = `${formatAmount(net)}<small>亿元</small>`;
+      sectionList.querySelectorAll(".panel-title span").forEach((element, index) => {
+        element.textContent = `小计 ${formatAmount(totals[index].total)} 亿元`;
+      });
+    }
+
+    function deleteRecord(row) {
+      const sectionId = row.dataset.section;
+      const index = Number(row.dataset.index);
+      records[sectionId].splice(index, 1);
+      saveRecords();
+      render();
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function buildExportText() {
+      return sections.map((section) => {
+        const lines = records[section.id]
+          .filter((record) => record.counterparty || record.amount || record.term || record.price)
+          .map((record) => [
+            record.counterparty || "",
+            record.amount || "",
+            record.term || "",
+            record.price || ""
+          ].join(" "));
+
+        return `${section.name}：${lines.length ? "\n" + lines.join("\n") : ""}`;
+      }).join("\n\n");
+    }
+
+    function openExportDialog() {
+      exportText.value = buildExportText();
+      exportDialog.classList.add("show");
+      exportText.focus();
+      exportText.select();
+    }
+
+    function closeExportDialog() {
+      exportDialog.classList.remove("show");
+    }
+
+    async function copyExportText() {
+      exportText.select();
+      try {
+        await navigator.clipboard.writeText(exportText.value);
+        copyBtn.textContent = "已复制";
+        setTimeout(() => {
+          copyBtn.textContent = "复制文本";
+        }, 1200);
+      } catch {
+        document.execCommand("copy");
+      }
+    }
+
+    sectionList.addEventListener("click", (event) => {
+      const addButton = event.target.closest("[data-add]");
+      const deleteButton = event.target.closest("[data-delete]");
+      if (addButton) {
+        addRecord(addButton.dataset.add);
+      }
+      if (deleteButton) {
+        deleteRecord(deleteButton.closest(".row"));
+      }
+    });
+
+    sectionList.addEventListener("input", (event) => {
+      const input = event.target.closest("input[data-field]");
+      if (!input) {
+        return;
+      }
+      updateRecord(input.closest(".row"), input.dataset.field, input.value);
+    });
+
+    document.querySelector("#exportBtn").addEventListener("click", openExportDialog);
+    document.querySelector("#closeExportBtn").addEventListener("click", closeExportDialog);
+    copyBtn.addEventListener("click", copyExportText);
+    exportDialog.addEventListener("click", (event) => {
+      if (event.target === exportDialog) {
+        closeExportDialog();
+      }
+    });
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeExportDialog();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
