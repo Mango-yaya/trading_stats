@@ -167,7 +167,7 @@
 
     .table-head {
       display: grid;
-      grid-template-columns: minmax(86px, 1.18fr) minmax(58px, 0.76fr) minmax(50px, 0.66fr) minmax(50px, 0.66fr) 30px;
+      grid-template-columns: minmax(86px, 1.18fr) minmax(58px, 0.76fr) minmax(50px, 0.66fr) minmax(50px, 0.66fr) 64px;
       gap: 5px;
       padding: 0 4px 2px;
       color: var(--muted);
@@ -177,7 +177,7 @@
 
     .row {
       display: grid;
-      grid-template-columns: minmax(86px, 1.18fr) minmax(58px, 0.76fr) minmax(50px, 0.66fr) minmax(50px, 0.66fr) 30px;
+      grid-template-columns: minmax(86px, 1.18fr) minmax(58px, 0.76fr) minmax(50px, 0.66fr) minmax(50px, 0.66fr) 64px;
       gap: 5px;
       align-items: center;
       padding: 6px 4px;
@@ -233,19 +233,43 @@
     }
 
     .row-actions {
-      display: block;
+      display: grid;
+      grid-template-columns: 28px 28px;
+      grid-template-rows: 16px 16px;
+      gap: 2px 4px;
+    }
+
+    .move-btn,
+    .delete-btn {
+      border-radius: 6px;
+      padding: 0;
+      font-weight: 700;
+    }
+
+    .move-btn {
+      width: 28px;
+      height: 16px;
+      border: 1px solid #cbd8e8;
+      color: var(--blue);
+      background: #f6f9fd;
+      font-size: 12px;
+      line-height: 12px;
+    }
+
+    .move-btn:disabled {
+      cursor: default;
+      opacity: 0.28;
     }
 
     .delete-btn {
-      width: 30px;
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      width: 28px;
       height: 34px;
       border: 1px solid #f1c7c2;
-      border-radius: 7px;
-      padding: 0;
       color: var(--red);
       background: #fff7f6;
       font-size: 20px;
-      font-weight: 650;
       line-height: 28px;
     }
 
@@ -334,6 +358,12 @@
     @media (max-width: 380px) {
       .app {
         width: min(100% - 18px, 520px);
+      }
+
+      .table-head,
+      .row {
+        grid-template-columns: minmax(78px, 1.15fr) minmax(54px, 0.74fr) minmax(46px, 0.64fr) minmax(46px, 0.64fr) 64px;
+        gap: 4px;
       }
 
       .field-grid {
@@ -440,7 +470,7 @@
               <span>金额</span>
               <span>期限</span>
               <span>价格</span>
-              <span></span>
+              <span>排序</span>
             </div>
             ${rows.map((record, index) => rowTemplate(section.id, record, index)).join("")}
           `
@@ -483,6 +513,8 @@
             </div>
           </div>
           <div class="row-actions">
+            <button class="move-btn" type="button" data-move="up" aria-label="上移" ${index === 0 ? "disabled" : ""}>↑</button>
+            <button class="move-btn" type="button" data-move="down" aria-label="下移" ${index === records[sectionId].length - 1 ? "disabled" : ""}>↓</button>
             <button class="delete-btn" type="button" data-delete aria-label="删除">×</button>
           </div>
         </div>
@@ -529,6 +561,20 @@
       const sectionId = row.dataset.section;
       const index = Number(row.dataset.index);
       records[sectionId].splice(index, 1);
+      saveRecords();
+      render();
+    }
+
+    function moveRecord(row, direction) {
+      const sectionId = row.dataset.section;
+      const index = Number(row.dataset.index);
+      const targetIndex = direction === "up" ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= records[sectionId].length) {
+        return;
+      }
+
+      [records[sectionId][index], records[sectionId][targetIndex]] =
+        [records[sectionId][targetIndex], records[sectionId][index]];
       saveRecords();
       render();
     }
@@ -583,9 +629,13 @@
 
     sectionList.addEventListener("click", (event) => {
       const addButton = event.target.closest("[data-add]");
+      const moveButton = event.target.closest("[data-move]");
       const deleteButton = event.target.closest("[data-delete]");
       if (addButton) {
         addRecord(addButton.dataset.add);
+      }
+      if (moveButton) {
+        moveRecord(moveButton.closest(".row"), moveButton.dataset.move);
       }
       if (deleteButton) {
         deleteRecord(deleteButton.closest(".row"));
