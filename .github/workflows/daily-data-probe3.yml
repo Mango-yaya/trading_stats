@@ -1,0 +1,60 @@
+name: daily-data-probe3
+on:
+  push:
+    paths: [".github/workflows/daily-data-probe3.yml"]
+  workflow_dispatch:
+  schedule:
+    - cron: "30 10 * * 1-5"
+permissions:
+  contents: write
+jobs:
+  probe3:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify final data sources
+        run: |
+          python3 - <<'EOF'
+          import json, datetime, urllib.request, urllib.parse
+          UA = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36'}
+          out = {'time_utc': datetime.datetime.utcnow().isoformat(), 'results': {}}
+          def fetch(url, headers=None, timeout=25):
+              req = urllib.request.Request(url, headers={**UA, **(headers or {})})
+              with urllib.request.urlopen(req, timeout=timeout) as r:
+                  return r.read().decode('utf-8', 'ignore')
+          # 1. Shibor (eastmoney)
+          try:
+              p = urllib.parse.urlencode({'reportName':'RPT_IMP_INTRESTRATEN','columns':'REPORT_DATE,IR_RATE,CHANGE_RATE','filter':'(MARKET_CODE="001")(CURRENCY_CODE="CNY")(INDICATOR_ID="001")','pageNumber':1,'pageSize':3,'sortTypes':-1,'sortColumns':'REPORT_DATE','source':'WEB','client':'WEB'})
+              j = json.loads(fetch('https://datacenter-web.eastmoney.com/api/data/v1/get?' + p))
+              out['results']['shibor_overnight'] = j['result']['data']
+          except Exception as e:
+              out['results']['shibor_overnight'] = {'error': repr(e)[:200]}
+          # 2. FR/FDR (chinamoney)
+          try:
+              j = json.loads(fetch('https://www.chinamoney.com.cn/ags/ms/cm-u-bk-currency/FrrHis?lang=CN&startDate=2026-11-10&endDate=2026-11-12', {'Referer': 'https://www.chinamoney.com.cn/'}))
+              out['results']['fr_fdr'] = j['data']['records'][:3]
+          except Exception as e:
+              out['results']['fr_fdr'] = {'error': repr(e)[:200]}
+          # 3. GC001/GC007 (push2)
+          try:
+              q = {}
+              for sid in ['1.204001','1.204007']:
+                  j = json.loads(fetch('https://push2.eastmoney.com/api/qt/stock/get?secid=' + sid + '&fields=f43,f57,f58,f60'))
+                  d = j.get('data') or {}
+                  q[sid] = {'name': d.get('f58'), 'rate_now': d.get('f43',0)/1000, 'rate_prev': d.get('f60',0)/1000}
+              out['results']['gc_quotes'] = q
+          except Exception as e:
+              out['results']['gc_quotes'] = {'error': repr(e)[:200]}
+          with open('probe3_result.json','w') as f:
+              json.dump(out, f, ensure_ascii=False, indent=1)
+          print(json.dumps(out, ensure_ascii=False)[:1500])
+          EOF
+      - name: Commit result
+        run: |
+          git config user.name "data-bot"
+          git config user.email "bot@users.noreply.github.com"
+          mkdir -p data-test && cp probe3_result.json data-test/result3.json
+          git add data-test/result3.json
+          git commit -m "probe3 $(date -u '+%F %H:%M')"
+          git push
