@@ -5,7 +5,7 @@
 用法: python3 daily.py --analysis /tmp/analysis.json [--no-upload] [--no-feishu]
 只依赖标准库。
 """
-import argparse, base64, datetime, json, os, re, sys, time, urllib.parse, urllib.request
+import argparse, base64, datetime, json, os, re, subprocess, sys, time, urllib.parse, urllib.request
 
 REPO = "Mango-yaya/trading_stats"
 PAGE = "https://mango-yaya.github.io/trading_stats/reports/latest.html"
@@ -42,30 +42,41 @@ def shibor_series(indicator="001", n=16):
     except Exception as e:
         log("Shibor fail", indicator, repr(e)[:80]); return []
 
+def _curl(url, headers=None, timeout=15):
+    cmd = ["curl", "-s", "--max-time", str(timeout)]
+    for k, v in (headers or {}).items():
+        cmd += ["-H", "%s: %s" % (k, v)]
+    cmd.append(url)
+    try:
+        return subprocess.run(cmd, capture_output=True, timeout=timeout + 5).stdout
+    except Exception:
+        return b""
+
 def gc_quote(secid):
-    """上交所质押式回购收盘价：新浪为主，东财兜底。返回 {'now','prev'}"""
+    """上交所质押式回购价：curl 直连（新浪优先，东财兜底）。返回 {'now','prev'}"""
     code = {"1.204001": "sh204001", "1.204007": "sh204007"}.get(secid, "")
     if code:
-        for _ in range(3):
-            try:
-                req = urllib.request.Request("https://hq.sinajs.cn/list=" + code,
-                      headers={"User-Agent": UA["User-Agent"], "Referer": "https://finance.sina.com.cn/"})
-                with urllib.request.urlopen(req, timeout=15) as r:
-                    txt = r.read().decode("gbk", "ignore")
-                m = re.search(r'"([^"]+)"', txt)
-                if m:
-                    p = m.group(1).split(",")
+        for _ in range(2):
+            raw = _curl("https://hq.sinajs.cn/list=" + code,
+                        {"User-Agent": UA["User-Agent"], "Referer": "https://finance.sina.com.cn/"})
+            m = re.search(r'"([^"]+)"', raw.decode("gbk", "ignore"))
+            if m:
+                p = m.group(1).split(",")
+                try:
                     return {"now": float(p[3]), "prev": float(p[2]), "name": p[0]}
-            except Exception as e:
-                log("GC sina fail", secid, repr(e)[:80])
-                time.sleep(1)
-    try:
-        j = json.loads(fetch("https://push2.eastmoney.com/api/qt/stock/get?secid=%s&fields=f43,f60,f58" % secid,
-                             {"Referer": "https://quote.eastmoney.com/"}))
-        d = j.get("data") or {}
-        return {"now": d.get("f43", 0) / 1000.0, "prev": d.get("f60", 0) / 1000.0, "name": d.get("f58")}
-    except Exception as e:
-        log("GC fail", secid, repr(e)[:80]); return {}
+                except Exception:
+                    pass
+            time.sleep(1)
+    for host in ["push2.eastmoney.com", "82.push2.eastmoney.com"]:
+        raw = _curl("https://%s/api/qt/stock/get?secid=%s&fields=f43,f60,f58" % (host, secid),
+                    {"User-Agent": UA["User-Agent"], "Referer": "https://quote.eastmoney.com/"})
+        try:
+            d = (json.loads(raw.decode("utf-8", "ignore")).get("data") or {})
+            if d.get("f43"):
+                return {"now": d["f43"] / 1000.0, "prev": d.get("f60", 0) / 1000.0, "name": d.get("f58")}
+        except Exception:
+            pass
+    log("GC fail", secid); return {}
 
 def frr_data(days=10):
     end = datetime.date.today()
