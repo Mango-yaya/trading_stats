@@ -1,0 +1,79 @@
+name: daily-data-probe2
+on:
+  push:
+    paths: [".github/workflows/daily-data-probe2.yml"]
+  workflow_dispatch:
+  schedule:
+    - cron: "30 10 * * 1-5"
+permissions:
+  contents: write
+jobs:
+  probe2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Discover and probe real endpoints
+        run: |
+          python3 - <<'EOF'
+          import json, re, datetime, urllib.request
+          UA = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36'}
+          out = {'time_utc': datetime.datetime.utcnow().isoformat(), 'findings': {}}
+          def fetch(url, headers=None, timeout=25):
+              req = urllib.request.Request(url, headers={**UA, **(headers or {})})
+              with urllib.request.urlopen(req, timeout=timeout) as r:
+                  return r.read().decode('utf-8', 'ignore')
+          # 1. 东方财富 Shibor 页面 -> 挖 reportName
+          try:
+              html = fetch('https://data.eastmoney.com/cjsj/shibor.html')
+              names = sorted(set(re.findall(r'reportName["\'=:\s]+([A-Za-z0-9_]{6,})', html)))
+              out['findings']['eastmoney_reportNames'] = names[:10]
+              api_hits = {}
+              for rn in names:
+                  try:
+                      body = fetch('https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=' + rn + '&columns=ALL&pageSize=3&pageNumber=1&sortColumns=TRADE_DATE&sortTypes=-1')
+                      j = json.loads(body)
+                      ok = j.get('success') and j.get('result') and j['result'].get('data')
+                      api_hits[rn] = {'ok': bool(ok), 'rows': len(j['result']['data']) if ok else 0,
+                                      'sample': json.dumps(j['result']['data'][0], ensure_ascii=False)[:300] if ok else j.get('message','')}
+                  except Exception as e:
+                      api_hits[rn] = {'error': repr(e)[:150]}
+              out['findings']['eastmoney_api_tests'] = api_hits
+          except Exception as e:
+              out['findings']['eastmoney_page'] = {'error': repr(e)[:200]}
+          # 2. 中国货币网 Shibor 页面 -> 挖 /ags 接口路径
+          for page in ['https://www.chinamoney.com.cn/chinese/mkdatalatest/fxshibor/',
+                       'https://www.chinamoney.com.cn/chinese/svpage/mkdata/']:
+              try:
+                  html2 = fetch(page)
+                  paths = sorted(set(re.findall(r'(/ags/[A-Za-z0-9_\-/]{4,})', html2)))[:15]
+                  rns = sorted(set(re.findall(r'reportName["\'=:\s]+([A-Za-z0-9_]{6,})', html2)))[:8]
+                  out['findings'][page] = {'ags_paths': paths, 'reportNames': rns}
+              except Exception as e:
+                  out['findings'][page] = {'error': repr(e)[:200]}
+          # 3. GC001/GC007 行情（已验证可用，补全字段）
+          try:
+              q = {}
+              for sid, nm in [('1.204001','GC001'), ('1.204007','GC007'), ('2.204001','R-001')]:
+                  try:
+                      body = fetch('https://push2.eastmoney.com/api/qt/stock/get?secid=' + sid + '&fields=f43,f57,f58,f60,f169,f170')
+                      j = json.loads(body).get('data') or {}
+                      val = j.get('f43'); prev = j.get('f60')
+                      q[nm + '_' + sid] = {'name': j.get('f58'), 'now': val/10000 if val else None, 'prev': prev/10000 if prev else None}
+                  except Exception as e:
+                      q[sid] = {'error': repr(e)[:120]}
+              out['findings']['repo_quotes'] = q
+          except Exception as e:
+              out['findings']['repo_quotes'] = {'error': repr(e)[:200]}
+          with open('probe2_result.json','w') as f:
+              json.dump(out, f, ensure_ascii=False, indent=1)
+          print(json.dumps(out, ensure_ascii=False)[:2000])
+          EOF
+      - name: Commit result
+        run: |
+          git config user.name "data-bot"
+          git config user.email "bot@users.noreply.github.com"
+          mkdir -p data-test && cp probe2_result.json data-test/result2.json
+          git add data-test/result2.json
+          git commit -m "probe2 $(date -u '+%F %H:%M')"
+          git push
