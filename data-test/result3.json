@@ -1,5 +1,5 @@
 {
- "time_utc": "2026-11-12T06:09:50.558257",
+ "time_utc": "2026-11-12T18:29:47.022399",
  "results": {
   "shibor_overnight": [
    {
@@ -24,12 +24,12 @@
   "gc_quotes": {
    "1.204001": {
     "name": "GC001",
-    "rate_now": 1.44,
+    "rate_now": 1.455,
     "rate_prev": 1.51
    },
    "1.204007": {
     "name": "GC007",
-    "rate_now": 1.415,
+    "rate_now": 1.42,
     "rate_prev": 1.425
    }
   }
