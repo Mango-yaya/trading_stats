@@ -1,0 +1,30 @@
+{
+ "time_utc": "2026-11-12T06:01:20.961523",
+ "findings": {
+  "eastmoney_reportNames": [],
+  "eastmoney_api_tests": {},
+  "https://www.chinamoney.com.cn/chinese/mkdatalatest/fxshibor/": {
+   "error": "<HTTPError 404: 'Not Found'>"
+  },
+  "https://www.chinamoney.com.cn/chinese/svpage/mkdata/": {
+   "error": "<HTTPError 404: 'Not Found'>"
+  },
+  "repo_quotes": {
+   "GC001_1.204001": {
+    "name": "GC001",
+    "now": 0.145,
+    "prev": 0.151
+   },
+   "GC007_1.204007": {
+    "name": "GC007",
+    "now": 0.1415,
+    "prev": 0.1425
+   },
+   "R-001_2.204001": {
+    "name": null,
+    "now": null,
+    "prev": null
+   }
+  }
+ }
+}
