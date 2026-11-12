@@ -1,0 +1,52 @@
+name: daily-data-probe
+on:
+  push:
+    paths: [".github/workflows/daily-data-probe.yml"]
+  workflow_dispatch:
+  schedule:
+    - cron: "30 10 * * 1-5"
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe data sources
+        run: |
+          python3 - <<'EOF'
+          import json, datetime, urllib.request
+          UA = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36'}
+          out = {'time_utc': datetime.datetime.utcnow().isoformat(), 'probes': {}}
+          def probe(name, url, headers=None, timeout=20):
+              try:
+                  req = urllib.request.Request(url, headers={**UA, **(headers or {})})
+                  with urllib.request.urlopen(req, timeout=timeout) as r:
+                      body = r.read(4000).decode('utf-8', 'ignore')
+                      out['probes'][name] = {'http': r.status, 'sample': body[:500]}
+              except Exception as e:
+                  out['probes'][name] = {'error': repr(e)[:200]}
+          probe('chinamoney_shibor',
+                'https://www.chinamoney.com.cn/ags/ms/cm-u-bk-currency/ShiborHis?lang=CN&moneyType=ShiborCNY&startDate=2026-11-06&endDate=2026-11-12',
+                {'Referer': 'https://www.chinamoney.com.cn/'})
+          for rn in ['RPTA_WEB_SHIBOR', 'RPT_SHIBOR_DATA']:
+              probe('eastmoney_' + rn,
+                    'https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=' + rn + '&columns=ALL&pageSize=5&pageNumber=1&sortColumns=TRADE_DATE&sortTypes=-1')
+          probe('eastmoney_quote_gc001',
+                'https://push2.eastmoney.com/api/qt/stock/get?secid=1.204001&fields=f43,f57,f58,f60,f169,f170')
+          probe('cls_telegraph',
+                'https://www.cls.cn/nodeapi/telegraphList?app=CailianpressWeb&os=web&sv=7.7.5&rn=5',
+                {'Referer': 'https://www.cls.cn/telegraph'})
+          with open('probe_result.json', 'w') as f:
+              json.dump(out, f, ensure_ascii=False, indent=1)
+          print(json.dumps(out, ensure_ascii=False)[:1200])
+          EOF
+      - name: Commit result
+        run: |
+          git config user.name "data-bot"
+          git config user.email "bot@users.noreply.github.com"
+          mkdir -p data-test && cp probe_result.json data-test/result.json
+          git add data-test/result.json
+          git commit -m "probe $(date -u '+%F %H:%M')"
+          git push
