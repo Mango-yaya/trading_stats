@@ -1,0 +1,37 @@
+{
+ "time_utc": "2026-11-12T06:09:50.558257",
+ "results": {
+  "shibor_overnight": [
+   {
+    "REPORT_DATE": "2026-11-12 00:00:00",
+    "IR_RATE": 1.332,
+    "CHANGE_RATE": 0
+   },
+   {
+    "REPORT_DATE": "2026-11-11 00:00:00",
+    "IR_RATE": 1.332,
+    "CHANGE_RATE": 0.87
+   },
+   {
+    "REPORT_DATE": "2026-11-10 00:00:00",
+    "IR_RATE": 1.3233,
+    "CHANGE_RATE": 0.93
+   }
+  ],
+  "fr_fdr": {
+   "error": "KeyError('records')"
+  },
+  "gc_quotes": {
+   "1.204001": {
+    "name": "GC001",
+    "rate_now": 1.44,
+    "rate_prev": 1.51
+   },
+   "1.204007": {
+    "name": "GC007",
+    "rate_now": 1.415,
+    "rate_prev": 1.425
+   }
+  }
+ }
+}
