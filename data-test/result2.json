@@ -1,5 +1,5 @@
 {
- "time_utc": "2026-11-18T18:58:59.881906",
+ "time_utc": "2026-11-19T19:07:16.505168",
  "findings": {
   "eastmoney_reportNames": [],
   "eastmoney_api_tests": {},
@@ -12,13 +12,13 @@
   "repo_quotes": {
    "GC001_1.204001": {
     "name": "GC001",
-    "now": 0.116,
-    "prev": 0.1175
+    "now": 0.1145,
+    "prev": 0.116
    },
    "GC007_1.204007": {
     "name": "GC007",
-    "now": 0.135,
-    "prev": 0.1305
+    "now": 0.1365,
+    "prev": 0.135
    },
    "R-001_2.204001": {
     "name": null,
