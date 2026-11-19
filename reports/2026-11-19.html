@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>宏观资金面一页纸 · 2026年11月11日</title>
+<style>
+  :root{
+    --ink:#1a2430;
+    --ink-2:#4a5866;
+    --ink-3:#7a8794;
+    --navy:#1b3f66;
+    --blue:#2f6fa8;
+    --blue-l:#eaf1f8;
+    --gold:#a8802c;
+    --gold-l:#f7f1e3;
+    --line:#e3e7ec;
+    --bg:#f2f4f7;
+    --red:#b3352b;
+    --green:#2e7d6f;
+  }
+  *{box-sizing:border-box;-webkit-text-size-adjust:100%;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size:16px;
+    line-height:1.8;
+    word-break:break-word;
+    overflow-x:hidden;
+  }
+  .paper{
+    max-width:820px;
+    margin:0 auto;
+    background:#fff;
+    padding:34px 40px 40px;
+    box-shadow:0 1px 3px rgba(20,35,55,.06);
+  }
+  /* ---------- header ---------- */
+  .hd{border-bottom:2px solid var(--navy);padding-bottom:16px;margin-bottom:26px;}
+  .hd-kicker{font-size:12px;letter-spacing:.18em;color:var(--gold);font-weight:600;margin-bottom:6px;}
+  .hd h1{font-size:26px;line-height:1.35;margin:0 0 8px;font-weight:700;color:var(--navy);letter-spacing:.01em;}
+  .hd-meta{font-size:13px;color:var(--ink-3);line-height:1.7;}
+  .hd-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .tag{display:inline-block;font-size:13px;padding:3px 10px;border-radius:3px;background:var(--blue-l);color:var(--navy);border:1px solid #d3e2ef;}
+  .tag.gold{background:var(--gold-l);color:var(--gold);border-color:#e8dcc2;}
+  /* ---------- sections ---------- */
+  section{margin:0 0 30px;}
+  .sec-h{display:flex;align-items:baseline;gap:10px;border-left:4px solid var(--navy);padding-left:11px;margin:0 0 14px;}
+  .sec-h .num{font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.08em;}
+  .sec-h h2{font-size:19px;margin:0;font-weight:700;color:var(--navy);letter-spacing:.01em;}
+  p{margin:0 0 12px;}
+  .lead{font-size:15.5px;color:var(--ink-2);}
+  /* ---------- 结论摘要 ---------- */
+  ol.sum{margin:0;padding-left:0;list-style:none;counter-reset:s;}
+  ol.sum li{
+    position:relative;
+    padding:0 0 0 30px;
+    margin-bottom:13px;
+    counter-increment:s;
+    font-size:16px;
+  }
+  ol.sum li::before{
+    content:counter(s);
+    position:absolute;left:0;top:4px;
+    width:21px;height:21px;line-height:21px;
+    text-align:center;font-size:12px;font-weight:700;
+    color:#fff;background:var(--navy);border-radius:2px;
+  }
+  ol.sum li b{color:var(--navy);}
+  .verdict{
+    margin-top:16px;padding:14px 16px;background:var(--gold-l);
+    border-left:3px solid var(--gold);font-size:15.5px;color:#5c4a24;
+  }
+  .verdict b{color:#8a6420;}
+  /* ---------- 温度计 ---------- */
+  .thermo{width:100%;border-collapse:collapse;font-size:15px;}
+  .thermo th{
+    text-align:left;font-size:12.5px;font-weight:600;color:var(--ink-3);
+    letter-spacing:.06em;padding:0 10px 8px;border-bottom:1.5px solid var(--navy);
+  }
+  .thermo td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .thermo td:first-child{font-weight:600;color:var(--navy);width:29%;}
+  .pill{display:inline-block;font-size:13px;padding:2px 10px;border-radius:11px;white-space:nowrap;font-weight:600;}
+  .pill.loose{background:#e8f2ee;color:var(--green);}
+  .pill.neutral{background:#eef1f4;color:#55636f;}
+  .pill.tight{background:#f8ebe9;color:var(--red);}
+  .sum-row{margin-top:14px;padding:13px 16px;background:var(--blue-l);border:1px solid #d3e2ef;border-radius:4px;font-size:15.5px;}
+  .sum-row b{color:var(--navy);}
+  /* ---------- 维度卡 ---------- */
+  .dim{border:1px solid var(--line);border-radius:5px;padding:16px 18px;margin-bottom:14px;background:#fcfcfd;}
+  .dim-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .dim-t{font-size:16.5px;font-weight:700;color:var(--navy);}
+  .dim dl{margin:0;}
+  .dim .row{display:flex;gap:10px;padding:6px 0;border-top:1px dashed #e8ebef;font-size:15px;line-height:1.75;}
+  .dim .row:first-child{border-top:none;}
+  .dim .k{flex:0 0 62px;color:var(--ink-3);font-size:13.5px;padding-top:2px;}
+  .dim .v{flex:1;color:var(--ink-2);}
+  .dim .v em{font-style:normal;color:var(--ink);font-weight:600;}
+  /* ---------- 图 ---------- */
+  .fig{border:1px solid var(--line);border-radius:5px;padding:14px 12px 10px;margin:0 0 12px;background:#fff;}
+  .fig-t{font-size:14.5px;font-weight:700;color:var(--navy);margin:0 0 2px;padding-left:2px;}
+  .fig-s{font-size:12px;color:var(--ink-3);margin:0 0 8px;padding-left:2px;}
+  .fig svg{display:block;width:100%;height:auto;}
+  .fig-note{font-size:11.5px;color:var(--ink-3);line-height:1.65;margin:8px 2px 0;}
+  .read p{font-size:15.5px;color:var(--ink-2);}
+  .read b{color:var(--ink);}
+  /* ---------- 推演 ---------- */
+  .hzn{border-left:3px solid var(--blue);padding:2px 0 2px 14px;margin-bottom:18px;}
+  .hzn h3{font-size:15.5px;margin:0 0 6px;color:var(--navy);font-weight:700;}
+  .hzn p{margin:0 0 8px;font-size:15.5px;color:var(--ink-2);}
+  .hzn .kpi{font-size:14px;color:var(--ink-3);background:#f6f8fa;border-radius:3px;padding:8px 11px;line-height:1.75;}
+  .hzn .kpi b{color:var(--navy);}
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);margin-top:34px;padding-top:16px;font-size:12.5px;color:var(--ink-3);line-height:1.85;}
+  footer b{color:var(--ink-2);}
+  /* ---------- mobile ---------- */
+  @media (max-width:680px){
+    .paper{padding:18px 14px 26px;}
+    body{font-size:16px;line-height:1.8;}
+    .hd{padding-bottom:13px;margin-bottom:22px;}
+    .hd h1{font-size:22px;}
+    .hd-meta{font-size:12.5px;}
+    .sec-h h2{font-size:18px;}
+    ol.sum li{font-size:15.5px;padding-left:27px;}
+    .verdict{font-size:15px;padding:12px 13px;}
+    /* 表格转卡片 */
+    table.thermo{display:block;width:100%;}
+    table.thermo thead{display:none;}
+    table.thermo tbody{display:block;width:100%;}
+    table.thermo tr{
+      display:block;width:100%;
+      background:#fff;border:1px solid var(--line);border-radius:10px;
+      padding:12px 14px 10px;margin-bottom:10px;
+    }
+    table.thermo td{
+      display:flex;justify-content:flex-start;align-items:flex-start;gap:6px;
+      width:100%;padding:5px 0;border:none;font-size:15px;
+    }
+    table.thermo td::before{
+      content:attr(data-label);
+      flex:0 0 70px;color:var(--ink-3);font-size:13.5px;font-weight:400;
+    }
+    table.thermo td:first-child{
+      display:block;width:100%;
+      font-size:17px;font-weight:700;color:var(--blue);
+      padding:0 0 8px;margin-bottom:6px;border-bottom:1px dashed var(--line);
+    }
+    table.thermo td:first-child::before{display:none;}
+    .dim{padding:14px 13px;}
+    .dim .row{display:block;padding:7px 0;}
+    .dim .k{display:block;padding:0 0 1px;font-size:13px;}
+    .dim .v{display:block;}
+    .fig{padding:12px 8px 10px;}
+    .fig-t{font-size:14px;}
+    .hzn{padding-left:12px;}
+  }
+</style>
+</head>
+<body>
+<div class="paper">
+<header class="hd">
+  <div class="hd-kicker">MACRO LIQUIDITY · DAILY</div>
+  <h1>宏观资金面一页纸</h1>
+  <div class="hd-meta">报告日：2026年11月19日（星期四）｜数据截至：当日盘中及16:30收盘快讯，DR/R系列收盘加权利率以CFETS 17:00后发布为准（本次快讯未获取到当日精确值，标记null）<br>政策利率锚：隔夜逆回购操作利率 <b>1.25%</b>（今日与前日持平）</div>
+  <div class="hd-tags"><span class="tag">综合：均衡偏松</span><span class="tag">政策利率换锚后：隔夜OMO常态化投放</span><span class="tag gold">税期后第1个交易日</span></div>
+</header>
+
+  <!-- ============ 1 结论摘要 ============ -->
+  <section>
+    <div class="sec-h"><span class="num">01</span><h2>结论摘要</h2></div>
+    <ol class="sum">
+      <li>央行今日开展<b>7675亿元隔夜逆回购</b>、利率1.25%持平并全额满足需求，对冲7002亿元到期后<b>净投放673亿元</b>；同日财政部与央行开展1个月国库现金定存1000亿元、中标利率1.30%。</li>
+      <li>资金面显著转松：Shibor隔夜下行3.3BP报<b>1.26%</b>、创2026年5月以来新低，隔夜加权利率贴近1.25%政策利率锚；Shibor 7天下行2.01BP报1.368%。</li>
+      <li>11月税期（11月16日至18日）收官走款消退，叠加今日1500亿元注资特别国债缴款平稳跨过，短端资金价格连续三日回落。</li>
+      <li>明日（11月20日）有<b>7675亿元逆回购到期</b>，另有30年期国债续发，关注央行续作力度与超长端承接。</li>
+      <li>未来两周关注：11月23日地方债供给高峰676.8亿元、24日集中缴款、25日缴准日接力抽水；本月MLF与买断式逆回购到期合计约1.8万亿元，买断式两期已合计净回笼3000亿元。</li>
+    </ol>
+    <div class="verdict">
+      <b>核心判断：</b>税期扰动消退叠加央行连续足额投放，隔夜利率贴锚运行，资金面<b>均衡偏松</b>；下周供给与缴款接力，宽松能否延续看央行续作节奏。
+    </div>
+  </section>
+
+  <!-- ============ 2 分维度分析 ============ -->
+  <section>
+    <div class="sec-h"><span class="num">02</span><h2>分维度分析</h2></div>
+    <div class="dim">
+      <div class="dim-h"><span class="dim-t">① 央行公开市场操作</span><span class="pill loose">偏松</span></div>
+      <div class="row"><span class="k">现状</span><span class="v">今日开展7675亿元隔夜逆回购（利率1.25%、全额满足需求），到期7002亿元，实现<b>净投放673亿元</b>；另有1个月国库现金定存1000亿元中标1.30%。</span></div><div class="row"><span class="k">驱动</span><span class="v">税期走款后流动性呵护，并对冲1500亿元特别国债缴款与政府债发行资金占用。</span></div><div class="row"><span class="k">关键指标</span><span class="v">OMO净投放673亿元；操作利率1.25%持平；隔夜操作量维持税期前段以来的高位。</span></div><div class="row"><span class="k">判断</span><span class="v">连续足额投放、态度呵护，公开市场渠道对资金面明确支持。</span></div><div class="row"><span class="k">风险</span><span class="v">明日隔夜到期<b>7675亿元</b>，若缩量续作则资金面边际收紧。</span></div>
+    </div>
+    <div class="dim">
+      <div class="dim-h"><span class="dim-t">② 央行货币政策</span><span class="pill neutral">中性</span></div>
+      <div class="row"><span class="k">现状</span><span class="v">政策利率换锚后隔夜逆回购成为常态化操作，利率1.25%持平；11月3个月与6个月买断式逆回购已缩量续作、合计净回笼3000亿元。</span></div><div class="row"><span class="k">驱动</span><span class="v">削峰填谷抑制资金利率过快下行，同时年底政府债发行高峰仍需保留中期流动性支持，机构预计买断式与MLF后续有望恢复加量续做。</span></div><div class="row"><span class="k">关键指标</span><span class="v">政策利率1.25%；本月MLF与买断式到期合计约1.8万亿元的续作安排。</span></div><div class="row"><span class="k">判断</span><span class="v">适度宽松基调未变，属精细化流动性管理而非转向收紧。</span></div><div class="row"><span class="k">风险</span><span class="v">换锚过程中操作缩量易被误读为收紧信号，引发市场波动。</span></div>
+    </div>
+    <div class="dim">
+      <div class="dim-h"><span class="dim-t">③ 银行间货币市场</span><span class="pill loose">偏松</span></div>
+      <div class="row"><span class="k">现状</span><span class="v">Shibor隔夜下行3.3BP报<b>1.26%</b>（创5月以来新低）、Shibor 7天下行2.01BP报1.368%、14天报1.384%；当日DR/R收盘加权利率快讯未获取，前日DR001收1.2892%、DR007收1.3850%。</span></div><div class="row"><span class="k">驱动</span><span class="v">税期扰动消退＋央行连续大额净投放，短端资金价格连续三日回落。</span></div><div class="row"><span class="k">关键指标</span><span class="v">DR001/DR007/R001当日CFETS收盘值（17:00后发布）；隔夜加权利率与1.25%政策锚的偏离度。</span></div><div class="row"><span class="k">判断</span><span class="v">隔夜利率贴着1.25%政策利率运行，银行间资金面均衡偏松。</span></div><div class="row"><span class="k">风险</span><span class="v">11月23日至25日供给与缴款接力抽水，短端利率或阶段性反弹。</span></div>
+    </div>
+    <div class="dim">
+      <div class="dim-h"><span class="dim-t">④ 交易所货币市场</span><span class="pill neutral">中性</span></div>
+      <div class="row"><span class="k">现状</span><span class="v">前日上交所GC001收1.205%低位；当日GC001以脚本自动抓取数据为准。</span></div><div class="row"><span class="k">驱动</span><span class="v">银行间宽松向交易所传导，权益缩量避险降低非银融资需求。</span></div><div class="row"><span class="k">关键指标</span><span class="v">GC001收盘利率；非银隔夜与银行间存款类机构的利差。</span></div><div class="row"><span class="k">判断</span><span class="v">非银融资环境随银行间转松而改善，分层压力减轻。</span></div><div class="row"><span class="k">风险</span><span class="v">跨月时点非银与银行分层或阶段性走阔。</span></div>
+    </div>
+    <div class="dim">
+      <div class="dim-h"><span class="dim-t">⑤ 缴税缴款缴准</span><span class="pill neutral">中性</span></div>
+      <div class="row"><span class="k">现状</span><span class="v">11月税期（11月16日至18日）已过、走款扰动消退；今日1500亿元注资特别国债缴款平稳跨过。</span></div><div class="row"><span class="k">驱动</span><span class="v">11月23日地方债供给高峰676.8亿元、24日集中缴款、25日缴准日三处抽水接力。</span></div><div class="row"><span class="k">关键指标</span><span class="v">政府债净缴款节奏；11月政府债净融资预计约1.7万亿元，压力集中第二与第四周。</span></div><div class="row"><span class="k">判断</span><span class="v">短期抽水压力后移至下周初，本旬资金面相对从容。</span></div><div class="row"><span class="k">风险</span><span class="v">缴款日DR007若重新上破1.40%，宽松预期或反复。</span></div>
+    </div>
+    <div class="dim">
+      <div class="dim-h"><span class="dim-t">⑥ 月末季末节假日</span><span class="pill neutral">中性</span></div>
+      <div class="row"><span class="k">现状</span><span class="v">月末渐近、跨月资金开始定价，14天Shibor报1.384%；近期无重大节假日扰动。</span></div><div class="row"><span class="k">驱动</span><span class="v">11月24日前后跨月需求升温，市场关注7天期逆回购是否重启补位跨月。</span></div><div class="row"><span class="k">关键指标</span><span class="v">DR014及跨月品种成交价格；跨月价差。</span></div><div class="row"><span class="k">判断</span><span class="v">央行大概率呵护跨月，月末预计平稳过渡。</span></div><div class="row"><span class="k">风险</span><span class="v">跨月与缴款叠加，非银端流动性分层或阶段性加剧。</span></div>
+    </div>
+    <div class="dim">
+      <div class="dim-h"><span class="dim-t">⑦ 一级市场债券发行</span><span class="pill neutral">中性</span></div>
+      <div class="row"><span class="k">现状</span><span class="v">今日农发行四只增发落地（3年期1.39%、5年期1.4689%、10年期1.7184%等）；明日30年期国债续发为超长端价格锚。</span></div><div class="row"><span class="k">驱动</span><span class="v">11月政府债净融资约1.7万亿元，供给节奏延续至12月上旬。</span></div><div class="row"><span class="k">关键指标</span><span class="v">11月23日地方债676.8亿元（含30年期置换隐债182.7亿元）为本周高峰。</span></div><div class="row"><span class="k">判断</span><span class="v">一级供给是本轮修复行情的主要压制项，缴款日资金波动比招标倍数更重要。</span></div><div class="row"><span class="k">风险</span><span class="v">明日30年期国债续发承接力待检验，若偏弱将压制超长端情绪。</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 3 图表 ============ -->
+  <section>
+    <div class="sec-h"><span class="num">03</span><h2>图表与解读</h2></div>
+    <div class="fig">
+      <div class="fig-t">图 1　当日主要货币市场利率对比</div>
+      <div class="fig-s">单位：%　红色虚线为隔夜逆回购操作利率（政策利率锚）</div>
+      <svg viewBox="0 0 420 148" width="100%" role="img" aria-label="当日主要货币市场利率对比"><line x1="160.5" y1="16" x2="160.5" y2="122" stroke="#eef1f4"/><line x1="225" y1="16" x2="225" y2="122" stroke="#eef1f4"/><line x1="289.5" y1="16" x2="289.5" y2="122" stroke="#eef1f4"/><line x1="282" y1="16" x2="282" y2="122" stroke="#b3352b" stroke-dasharray="5 3" stroke-width="1.2"/><text x="282" y="138" font-size="11" fill="#b3352b" text-anchor="middle">政策利率 1.25%</text><text x="90" y="35" font-size="12.5" fill="#4a5866" text-anchor="end">FDR001</text><rect x="96" y="24" width="198" height="15" fill="#1b3f66" rx="1.5"/><text x="300" y="36" font-size="12" fill="#1a2430" font-weight="600">1.2600</text><text x="90" y="69" font-size="12.5" fill="#4a5866" text-anchor="end">Shibor 隔夜</text><rect x="96" y="58" width="198" height="15" fill="#1b3f66" rx="1.5"/><text x="300" y="70" font-size="12" fill="#1a2430" font-weight="600">1.2600</text><text x="90" y="103" font-size="12.5" fill="#4a5866" text-anchor="end">GC001</text><rect x="96" y="92" width="60" height="15" fill="#a8802c" rx="1.5"/><text x="162" y="104" font-size="12" fill="#1a2430" font-weight="600">1.1450</text></svg>
+      <div class="fig-note">DR001、DR007、R001为17:00后CFETS收盘加权利率（当日精确值快讯未获取），FDR001与GC001由脚本自动抓取；红色虚线为隔夜逆回购政策利率锚1.25%。</div>
+    </div>
+    <div class="fig">
+      <div class="fig-t">图 2　Shibor 隔夜（近 16 个交易日）</div>
+      <div class="fig-s">单位：%　红色虚线为政策利率锚 1.25%</div>
+      <svg viewBox="0 0 400 210" width="100%" role="img" aria-label="Shibor隔夜走势"><line x1="34" y1="161.577" x2="384" y2="161.577" stroke="#eef1f4"/><line x1="34" y1="151.155" x2="384" y2="151.155" stroke="#eef1f4"/><line x1="34" y1="140.732" x2="384" y2="140.732" stroke="#eef1f4"/><line x1="34" y1="130.31" x2="384" y2="130.31" stroke="#eef1f4"/><line x1="34" y1="119.887" x2="384" y2="119.887" stroke="#eef1f4"/><line x1="34" y1="140.732" x2="384" y2="140.732" stroke="#b3352b" stroke-dasharray="5 3" stroke-width="1.2"/><text x="382" y="135.732" font-size="11" fill="#b3352b" text-anchor="end">政策利率 1.25%</text><polyline fill="none" stroke="#1b3f66" stroke-width="1.8" points="34,107.38 57.2,100.085 80.4,103.211 103.6,99.9803 126.8,125.099 150,127.183 173.2,106.338 196.4,74.0282 219.6,64.3352 242.8,55.2676 266,55.2676 289.2,91.7465 312.4,84.4507 335.6,85.493 358.8,95.9155 382,130.31"/><circle cx="382" cy="130.31" r="2.8" fill="#1b3f66"/><text x="382" y="123.31" font-size="11.5" fill="#1a2430" font-weight="600" text-anchor="end">1.2600</text><text x="34" y="198" font-size="11" fill="#8b98a5">10-29</text><text x="382" y="198" font-size="11" fill="#8b98a5" text-anchor="end">11-19</text></svg>
+      <div class="fig-note">数据来源：东方财富数据中心Shibor接口，展示近16个交易日隔夜Shibor走势，红色虚线为政策利率锚1.25%。</div>
+    </div>
+
+    <div class="read">
+      <p><b>解读：</b>今日资金面是「政策信号＋税期出清」双驱动：隔夜7675亿全额续作、净投放673亿，Shibor隔夜跌破1.27%创5月以来新低，短端明确贴近<b>1.25%政策利率锚</b>，是本轮修复最扎实的地基。1500亿特别国债缴款平稳跨过，负债端并不脆弱；但下周<b>供给高峰（11/23）—集中缴款（11/24）—缴准（11/25）</b>三处抽水接力，若DR001守住1.25%—1.27%区间，宽松可延续至月末，否则反弹仍会反复。</p>
+    </div>
+  </section>
+
+  <!-- ============ 4 未来推演 ============ -->
+  <section>
+    <div class="sec-h"><span class="num">04</span><h2>未来推演</h2></div>
+    <div class="hzn">
+      <h3>未来 1–5 个交易日（11月20日至25日）</h3>
+      <p>明日7675亿元到期的续作力度与30年期国债续发是近端观察点；随后11月23日地方债676.8亿元供给高峰、24日集中缴款、25日缴准接力抽水，资金面或由偏松向均衡回归。</p>
+      <div class="kpi">DR001能否守住1.25%—1.27%；DR007是否稳定在1.35%—1.40%；30年期国债续发中标情况。</div>
+    </div>
+    <div class="hzn">
+      <h3>未来 1–2 周（跨月过渡期）</h3>
+      <p>政府债净缴款与跨月需求叠加，11月政府债净融资约1.7万亿元、压力集中第二与第四周；央行大概率以隔夜足额投放加7天逆回购补位呵护跨月，月末资金面预计平稳偏松过渡。</p>
+      <div class="kpi">7天逆回购是否重启补位；跨月14天资金价格；政府债单日缴款规模。</div>
+    </div>
+    <div class="hzn">
+      <h3>税期后（11月下旬至12月初展望）</h3>
+      <p>税期（11月16日至18日）走款扰动确认消退，短端利率连续三日回落；月末财政支出下旬释放、叠加央行呵护，资金面有望维持均衡偏松，宽松延续性取决于央行对大额到期的续作态度。</p>
+      <div class="kpi">隔夜加权利率相对<b>1.25%</b>政策利率的偏离度；Shibor隔夜是否进一步下行。</div>
+    </div>
+  </section>
+
+  <!-- ============ 5 免责 ============ -->
+  <footer>
+数据来源：中国人民银行公开市场业务公告（11月19日）、上海证券报·中国证券网、中国金融信息网（新华财经债市日报）、财联社、中国货币网、Shibor官网、机构债市复盘（2026年11月19日）；机构观点引自兴业证券、南华期货、财通证券、东方金诚。<br>口径说明：公开市场操作为当日央行公告口径，不含国库现金定存；Shibor为当日发布值；DR001、DR007、R001为17:00后CFETS收盘加权利率，本次快讯未获取到当日精确值、相关字段标记null，前日参考值（11月18日）为DR001 1.2892%、DR007 1.3850%；GC001、FR001、FDR001由脚本自动抓取。<br>免责声明：本报告仅为公开信息整理与市场观察，不构成任何投资建议；数据以央行与CFETS官方最终发布为准。
+  </footer>
+
+  </div>
+</body>
+</html>
