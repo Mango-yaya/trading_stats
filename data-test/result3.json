@@ -1,7 +1,12 @@
 {
- "time_utc": "2026-11-24T20:45:05.419689",
+ "time_utc": "2026-11-25T20:01:58.046978",
  "results": {
   "shibor_overnight": [
+   {
+    "REPORT_DATE": "2026-11-25 00:00:00",
+    "IR_RATE": 1.271,
+    "CHANGE_RATE": -0.3
+   },
    {
     "REPORT_DATE": "2026-11-24 00:00:00",
     "IR_RATE": 1.274,
@@ -11,18 +16,22 @@
     "REPORT_DATE": "2026-11-23 00:00:00",
     "IR_RATE": 1.262,
     "CHANGE_RATE": 0.08
-   },
-   {
-    "REPORT_DATE": "2026-11-20 00:00:00",
-    "IR_RATE": 1.2612,
-    "CHANGE_RATE": 0.12
    }
   ],
   "fr_fdr": {
    "error": "KeyError('records')"
   },
   "gc_quotes": {
-   "error": "<HTTPError 502: 'Bad Gateway'>"
+   "1.204001": {
+    "name": "GC001",
+    "rate_now": 1.45,
+    "rate_prev": 1.31
+   },
+   "1.204007": {
+    "name": "GC007",
+    "rate_now": 1.425,
+    "rate_prev": 1.395
+   }
   }
  }
 }
