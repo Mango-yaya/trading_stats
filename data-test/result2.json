@@ -1,5 +1,5 @@
 {
- "time_utc": "2026-11-26T19:45:34.157325",
+ "time_utc": "2026-11-27T19:36:16.344060",
  "findings": {
   "eastmoney_reportNames": [],
   "eastmoney_api_tests": {},
@@ -10,14 +10,20 @@
    "error": "<HTTPError 404: 'Not Found'>"
   },
   "repo_quotes": {
-   "1.204001": {
-    "error": "<HTTPError 502: 'Bad Gateway'>"
+   "GC001_1.204001": {
+    "name": "GC001",
+    "now": 0.147,
+    "prev": 0.1385
    },
-   "1.204007": {
-    "error": "<HTTPError 502: 'Bad Gateway'>"
+   "GC007_1.204007": {
+    "name": "GC007",
+    "now": 0.143,
+    "prev": 0.142
    },
-   "2.204001": {
-    "error": "<HTTPError 502: 'Bad Gateway'>"
+   "R-001_2.204001": {
+    "name": null,
+    "now": null,
+    "prev": null
    }
   }
  }
